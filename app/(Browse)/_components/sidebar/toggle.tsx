@@ -26,7 +26,7 @@ const Toggle = () => {
         </div>
       )}
       {!!collapsed && (
-        <div className="p-3 sm:flex items-center w-full h-auto hidden">
+        <div className="p-3 lg:flex items-center w-full h-auto hidden">
           {/* <p className="text-primary font-semibold">For You</p> */}
           <Hint side="left" label={label} asChild>
             <Button variant="ghost" className="ml-auto">
