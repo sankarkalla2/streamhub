@@ -3,15 +3,24 @@
 import { Button } from "@/components/ui/button";
 import { onFollow } from "@/actions/follow";
 import { useTransition } from "react";
+import { toast } from "sonner";
+import { User } from "@prisma/client";
 
 interface ActionsProps {
   isFollowing: boolean;
+  user: User
 }
-const Actions = ({ isFollowing }: ActionsProps) => {
+const Actions = ({ isFollowing, user }: ActionsProps) => {
   const [loading, startTransition] = useTransition();
   const onClick = () => {
     startTransition(() => {
-      onFollow("123");
+      onFollow(user.id)
+        .then(() => {
+          toast.success("You followed user");
+        })
+        .catch(() => {
+          toast.error("something went wrong");
+        });
     });
   };
   return (

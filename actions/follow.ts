@@ -1,9 +1,17 @@
 "use server";
 
-export const onFollow = (id: string) => {
+import { followUser } from "@/lib/follow-service";
+import { revalidatePath } from "next/cache";
+export const onFollow = async (id: string) => {
   try {
-    console.log("Iam same as server component", id);
-  } catch (err) {
-    throw new Error("Internel server error");
+    const follow = await followUser(id);
+
+    // revalidatePath("/");
+    // if (follow) {
+    //   revalidatePath(`/${follow.following.username}`);
+    // }
+    // console.log("Iam same as server component", id);
+  } catch (err: any) {
+    throw new Error("Internel server error", err);
   }
 };

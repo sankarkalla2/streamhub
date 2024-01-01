@@ -17,7 +17,7 @@ const UserName = async({ params }: UserNameProps) => {
     <p>Username: {params.username}</p>
     <p>userId: {user?.id}</p>
     <p>isFollowing: { `${isFollowing}`}</p>
-    <Actions isFollowing={isFollowing}/>
+    <Actions isFollowing={isFollowing} user={user}/>
 
   </div>;
 };

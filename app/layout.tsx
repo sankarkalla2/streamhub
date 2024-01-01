@@ -4,7 +4,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark, shadesOfPurple } from "@clerk/themes";
 import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "./(Browse)/_components/navbar";
+
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Toaster theme="light" />
             {children}
           </ThemeProvider>
         </body>
