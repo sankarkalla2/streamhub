@@ -8,7 +8,7 @@ import { User } from "@prisma/client";
 
 interface ActionsProps {
   isFollowing: boolean;
-  user: User
+  user: User;
 }
 const Actions = ({ isFollowing, user }: ActionsProps) => {
   const [loading, startTransition] = useTransition();

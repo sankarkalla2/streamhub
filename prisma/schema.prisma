@@ -34,6 +34,7 @@ model Follow {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([followingId, follwerId])
   @@unique([follwerId])
   @@unique([followingId])
 }

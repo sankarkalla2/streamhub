@@ -33,35 +33,39 @@ export const isFollowingUser = async (id: string) => {
 };
 
 export const followUser = async (id: string) => {
-  const self = await getSelf();
+  try {
+    const self = await getSelf();
 
-  const otherUser = await db.user.findUnique({
-    where: {
-      id,
-    },
-  });
-  if (!otherUser) throw new Error("User not found");
+    const otherUser = await db.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!otherUser) throw new Error("User not found");
 
-  if (otherUser.id === self.id) throw new Error("You cannot follow yourself");
+    if (otherUser.id === self.id) throw new Error("You cannot follow yourself");
 
-  const existingFollow = await db.follow.findFirst({
-    where: {
-      follwerId: self.id,
-      followingId: otherUser.id
-    }
-  })
-  if(existingFollow) throw new Error('Already following');
+    const existingFollow = await db.follow.findFirst({
+      where: {
+        follwerId: self.id,
+        followingId: otherUser.id,
+      },
+    });
+    if (existingFollow) throw new Error("Already following");
 
-  const createFollow = await db.follow.create({
-    data: {
-      follwerId: self.id,
-      followingId: otherUser.id
-    },
-    include: {
-      follower: true,
-      following: true
-    }
-  })
+    const createFollow = await db.follow.create({
+      data: {
+        follwerId: self.id,
+        followingId: otherUser.id,
+      },
+      include: {
+        follower: true,
+        following: true,
+      },
+    });
 
-  return createFollow;
+    return createFollow;
+  } catch (err) {
+    console.log("Error", err);
+  }
 };
