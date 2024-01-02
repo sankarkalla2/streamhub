@@ -32,6 +32,12 @@ export const isFollowingUser = async (id: string) => {
   }
 };
 
+
+export const followedUser = async() => {
+  const self = await getSelf();
+  
+}
+
 export const followUser = async (id: string) => {
   try {
     const self = await getSelf();
@@ -67,5 +73,47 @@ export const followUser = async (id: string) => {
     return createFollow;
   } catch (err) {
     console.log("Error", err);
+  }
+};
+
+export const unFollowUser = async (id: string) => {
+  try {
+    const self = await getSelf();
+    const otherUser = await db.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!otherUser) {
+      throw new Error("User not found");
+    }
+
+    const existingFollow = await db.follow.findFirst({
+      where: {
+        followingId: otherUser.id,
+        follwerId: self.id,
+      },
+    });
+    if (!existingFollow || otherUser.id === self.id) {
+      throw new Error(
+        "You are not allowed to unfollow who you are not following "
+      );
+    }
+
+    const unfollow = await db.follow.delete({
+      where: {
+        id: existingFollow.id,
+      },
+      include: {
+        follower: true,
+        following: true,
+      },
+    });
+
+    return unfollow;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error("Internel Server Error", err);
   }
 };

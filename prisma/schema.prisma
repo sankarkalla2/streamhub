@@ -6,9 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider     = "postgresql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -35,6 +34,4 @@ model Follow {
   updatedAt DateTime @updatedAt
 
   @@unique([followingId, follwerId])
-  @@unique([follwerId])
-  @@unique([followingId])
 }
