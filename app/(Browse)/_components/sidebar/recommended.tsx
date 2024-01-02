@@ -27,7 +27,7 @@ const Recommended = ({ data }: RecommendedProps) => {
               isLive={false}
             />
           ))}
-      </div>
+      </div> 
     </div>
   );
 };

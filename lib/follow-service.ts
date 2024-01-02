@@ -32,11 +32,23 @@ export const isFollowingUser = async (id: string) => {
   }
 };
 
+export const getFollowedUsers = async () => {
+  try {
+    const self = await getSelf();
+    const users = await db.follow.findMany({
+      where: {
+        follwerId: self.id,
+      },
+      include: {
+        following: true,
+      },
+    });
 
-export const followedUser = async() => {
-  const self = await getSelf();
-  
-}
+    return users;
+  } catch (err) {
+    return [];
+  }
+};
 
 export const followUser = async (id: string) => {
   try {
