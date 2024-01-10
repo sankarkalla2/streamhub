@@ -1,6 +1,5 @@
 import db from "@/db";
 import { getSelf } from "./auth-service";
-import { error } from "console";
 
 export const isBlockedByUser = async (id: string) => {
   try {
@@ -21,6 +20,37 @@ export const isBlockedByUser = async (id: string) => {
         blockedId_blockerId: {
           blockedId: self.id,
           blockerId: otherUser.id,
+        },
+      },
+    });
+
+    return !!isBlocked;
+  } catch (err) {
+    return false;
+  }
+};
+
+export const isUserBlockedByMe = async (id: string) => {
+  try {
+    const self = await getSelf();
+
+    const otherUser = await db.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!otherUser) {
+      throw new Error("User not found");
+    }
+    if (self.id === otherUser.id) {
+      return true;
+    }
+
+    const isBlocked = await db.block.findUnique({
+      where: {
+        blockedId_blockerId: {
+          blockedId: otherUser.id,
+          blockerId: self.id,
         },
       },
     });
@@ -69,6 +99,7 @@ export const blockUser = async (id: string) => {
 
     return blockedUser;
   } catch (err: any) {
+    console.log(err)
     throw new Error("Internel server error");
   }
 };
@@ -116,6 +147,7 @@ export const unblockUser = async (id: string) => {
 
     return unblock;
   } catch (err) {
+    console.log(err)
     throw new Error("Internel Error");
   }
 };

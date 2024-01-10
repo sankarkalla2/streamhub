@@ -6,12 +6,14 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 import { User } from "@prisma/client";
 import { followUser } from "@/lib/follow-service";
+import { onBlock, onUnBlock } from "@/actions/block";
 
 interface ActionsProps {
   isFollowing: boolean;
+  isBlocked: boolean;
   user: User;
 }
-const Actions = ({ isFollowing, user }: ActionsProps) => {
+const Actions = ({ isFollowing, isBlocked, user }: ActionsProps) => {
   const [loading, startTransition] = useTransition();
 
   const handleFollow = async (id: string) => {
@@ -33,6 +35,26 @@ const Actions = ({ isFollowing, user }: ActionsProps) => {
         toast.error("something went wrong");
       });
   };
+
+  const handleBlock = async (id: string) => {
+    startTransition(() => {
+      !isBlocked
+        ? onBlock(id)
+            .then((data) => {
+              toast.success(`You blocked user ${data?.blocked.username}`);
+            })
+            .catch((err) => {
+              toast.error("something went wrong");
+            })
+        : onUnBlock(id)
+            .then((data) => {
+              toast.success(`You unblocked user ${data?.blocked.username}`);
+            })
+            .catch((err) => {
+              toast.error("Something went wrong");
+            });
+    });
+  };
   const onClick = async () => {
     startTransition(async () => {
       if (isFollowing) {
@@ -44,9 +66,18 @@ const Actions = ({ isFollowing, user }: ActionsProps) => {
     });
   };
   return (
-    <Button variant="primary" onClick={onClick} disabled={loading}>
-      {isFollowing ? "UnFollow" : "Follow"}
-    </Button>
+    <>
+      <Button variant="primary" onClick={onClick} disabled={loading}>
+        {isFollowing ? "UnFollow" : "Follow"}
+      </Button>
+      <Button
+        variant="primary"
+        onClick={() => handleBlock(user.id)}
+        disabled={loading}
+      >
+        {isBlocked ? "Unblock" : "Block"}
+      </Button>
+    </>
   );
 };
 

@@ -25,6 +25,7 @@ export const onUnFollow = async (id: string) => {
     }
     console.log("iam server component i can deal with api calls")
   } catch (err: any) {
+    console.log(err)
     throw new Error("Internel server error", err);
   }
 };
