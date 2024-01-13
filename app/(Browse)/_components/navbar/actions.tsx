@@ -9,13 +9,15 @@ const Actions = async () => {
     <div>
       {!user ? (
         <SignInButton>
-          <Button size='sm' variant='primary'>Login</Button>
+          <Button size="sm" variant="primary">
+            Login
+          </Button>
         </SignInButton>
       ) : (
         <div className="flex items-center gap-x-2 cursor-pointer">
           <Button variant="ghost" size="sm" asChild>
             <Link
-              href="/u/dashboard"
+              href={`/u/${user.username}`}
               className="flex gap-x-1 items-center text-muted-foreground hover:text-primary"
             >
               <Clapperboard className="w-6 h-6" />

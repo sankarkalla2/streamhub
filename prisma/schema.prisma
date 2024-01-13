@@ -2,8 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -12,20 +13,44 @@ datasource db {
 }
 
 model User {
-  id             String   @id @unique @default(uuid())
-  username       String   @unique
-  imageUrl       String   @db.Text
-  externalUserId String   @unique
-  bio            String?  @db.Text
-  following      Follow[] @relation("Following")
-  follewedBy     Follow[] @relation("FollowedBy")
-  blocked        Block[]  @relation("Blocked")
-  blocking       Block[]  @relation("Blocking")
+  id             String  @id @unique @default(uuid())
+  username       String  @unique
+  imageUrl       String  @db.Text
+  externalUserId String  @unique
+  bio            String? @db.Text
 
+  following  Follow[] @relation("Following")
+  follewedBy Follow[] @relation("FollowedBy")
+
+  blocked  Block[] @relation("Blocked")
+  blocking Block[] @relation("Blocking")
+
+  stream    Stream?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model Stream {
+  id           String  @id @unique @default(uuid())
+  name         String  @db.Text
+  thumbnailUrl String? @db.Text
+
+  ingressId String? @unique
+  serverUrl String? @db.Text
+  streamKey String? @db.Text
+
+  isLive        Boolean @default(false)
+  isChatEnabled Boolean @default(true)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([name])
+}
 
 model Follow {
   id          String @id @unique @default(uuid())
