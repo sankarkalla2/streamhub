@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "debian-openssl-3.0.x"]
   previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
@@ -39,8 +39,10 @@ model Stream {
   serverUrl String? @db.Text
   streamKey String? @db.Text
 
-  isLive        Boolean @default(false)
-  isChatEnabled Boolean @default(true)
+  isLive              Boolean @default(false)
+  isChatEnabled       Boolean @default(true)
+  isChatFollowersOnly Boolean @default(false)
+  isChatDelayed       Boolean @default(false)
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
