@@ -37,7 +37,7 @@ const Navigation = () => {
     return (
       <ul className="space-y-2 px-2 pt-4 lg:pt-0">
         {[...Array(4)].map((_, i) => (
-          <NavItemSkeleton />
+          <NavItemSkeleton key={i} />
         ))}
       </ul>
     );
