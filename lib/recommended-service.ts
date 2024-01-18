@@ -1,10 +1,10 @@
 import db from "@/db";
 import { getSelf } from "./auth-service";
-import { User } from "@prisma/client";
+import { Stream, User } from "@prisma/client";
 
 export const getRecommended = async () => {
   let userId;
-  let users: User[] = [];
+  let users = [];
 
   try {
     const self = await getSelf();
@@ -31,8 +31,25 @@ export const getRecommended = async () => {
               },
             },
           },
+          {
+            NOT: {
+              blocking: {
+                some: {
+                  blockedId: userId,
+                },
+              },
+            },
+          },
         ],
       },
+      include: {
+        stream: {
+          select: {
+            isLive: true,
+          },
+        },
+      },
+
       orderBy: {
         createdAt: "desc",
       },
@@ -41,6 +58,13 @@ export const getRecommended = async () => {
     users = await db.user.findMany({
       orderBy: {
         createdAt: "desc",
+      },
+      include: {
+        stream: {
+          select: {
+            isLive: true,
+          },
+        },
       },
     });
   }
